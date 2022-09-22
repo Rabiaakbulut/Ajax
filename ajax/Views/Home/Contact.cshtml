@@ -1,0 +1,81 @@
+﻿@model IEnumerable<ajax.Models.userModel>
+
+@{
+    ViewBag.Title = "Contact";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>İletişim</h2>
+
+<div>
+    <input type="text" class="form-control" id="userFullName" placeholder="Ad Soyad" />
+    <input type="date" class="form-control" id="userDate" placeholder="Tarih" />
+    <input type="text" class="form-control" id="userAge" placeholder="Yaş" />
+    <select id="userCity" class="form-control">
+        @foreach (var item in ViewBag.cities)
+        {
+            <option value=@item.First>@item.First</option>
+        }
+    </select>
+    <button type="button" id="btnadduser" class="btn btn-outline-info">Kişi Ekle</button>
+</div>
+
+<br />
+
+<div id="datas">
+    <table class="table">
+        <tr>
+            <th>
+                Ad Soyad
+            </th>
+            <th>
+                Tarih
+            </th>
+            <th>
+                Yaş
+            </th>
+            <th>
+                Yaşadığı Şehir
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.age)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.city)
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+@section scripts {
+    <script>
+        $("#btnadduser").click(function () {
+            let user = {
+                fullName: $("#userFullName").val(),
+                date: $("#userDate").val(),
+                age: $("#userAge").val(),
+                city: $("#userCity").val(),
+            };
+            $.ajax({
+                type: "post",
+                url: "/Home/AddUser/",
+                data: user,
+                success: function () {
+                    $("#datas").load(" #datas");
+                }
+            });
+        });
+    </script>
+}
